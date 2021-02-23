@@ -4,6 +4,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Text,
+  TextInput,
 } from 'react-native';
 import {
   Container,
@@ -21,6 +23,11 @@ import { FormHandles } from '@unform/core';
 
 const SignUp: FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const emailInputRef = useRef<TextInput>(null);
+  const passwordInputRef = useRef<TextInput>(null);
+
+  const submitForm = () => {};
+
   const navigation = useNavigation();
   return (
     <>
@@ -37,10 +44,43 @@ const SignUp: FC = () => {
             <Image source={logoImg} />
             <Title>Crie sua conta</Title>
             <Form ref={formRef} onSubmit={() => false}>
-              <Input name="name" icon="user" placeholder="Nome" />
-              <Input name="email" icon="mail" placeholder="E-mail" />
-              <Input name="password" icon="lock" placeholder="Senha" />
-              <Button onPress={() => false}>Entrar</Button>
+              <Input
+                name="name"
+                icon="user"
+                placeholder="Nome"
+                autoCapitalize="words"
+                blurOnSubmit={false}
+                onSubmitEditing={() => {
+                  emailInputRef.current?.focus();
+                }}
+              />
+              <Input
+                ref={emailInputRef}
+                name="email"
+                icon="mail"
+                placeholder="E-mail"
+                keyboardType="email-address"
+                autoCorrect={false}
+                blurOnSubmit={false}
+                autoCapitalize="none"
+                returnKeyType="next"
+                onSubmitEditing={() => {
+                  passwordInputRef.current?.focus();
+                }}
+              />
+              <Input
+                ref={passwordInputRef}
+                name="password"
+                icon="lock"
+                placeholder="Senha"
+                secureTextEntry
+                textContentType="newPassword"
+                returnKeyType="send"
+                onSubmitEditing={() => formRef.current?.submitForm()}
+              />
+              <Button onPress={() => formRef.current?.submitForm()}>
+                Entrar
+              </Button>
             </Form>
           </Container>
         </ScrollView>
